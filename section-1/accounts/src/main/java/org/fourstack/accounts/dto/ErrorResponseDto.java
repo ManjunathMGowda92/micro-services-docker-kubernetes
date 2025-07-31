@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ErrorResponseDto {
-    private String apiPath;
-    private HttpStatus status;
     private int statusCode;
+    private HttpStatus status;
     private String errorMessage;
+    private String apiPath;
     private LocalDateTime timestamp;
 }
