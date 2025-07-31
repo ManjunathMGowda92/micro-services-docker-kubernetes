@@ -16,11 +16,13 @@ public class BaseEntity {
 
     @Column(updatable = false)
     private LocalDateTime creationTimestamp;
+
     @Column(updatable = false)
     private String createdBy;
 
     @Column(insertable = false)
     private LocalDateTime updatedTimestamp;
+
     @Column(insertable = false)
     private String updatedBy;
 }
