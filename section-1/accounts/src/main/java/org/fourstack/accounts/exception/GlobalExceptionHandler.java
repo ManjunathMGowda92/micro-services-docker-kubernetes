@@ -21,6 +21,24 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(ResourceNotFoundException exception, WebRequest request) {
+        String apiPath = request.getDescription(false);
+
+        ErrorResponseDto errorResponse= buildErrorResponse(exception.getMessage(), apiPath, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(InvalidInputException exception, WebRequest request) {
+        String apiPath = request.getDescription(false);
+
+        ErrorResponseDto errorResponse= buildErrorResponse(exception.getMessage(), apiPath, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorResponse);
+    }
+
     private ErrorResponseDto buildErrorResponse(String message, String path, HttpStatus status) {
         path = path.contains("uri=") ? path.substring(path.indexOf("uri=") + 4) : path;
         return ErrorResponseDto.builder()
