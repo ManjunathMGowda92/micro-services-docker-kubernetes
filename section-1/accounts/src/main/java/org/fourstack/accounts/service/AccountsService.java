@@ -76,4 +76,12 @@ public interface AccountsService {
      * @return CustomerDetailsDto object including customer and Accounts information.
      */
     ResponseEntity<CustomerDetailsDto> retrieveCompleteCustomerDetails(CustomerAccountRequestDto dto);
+
+    /**
+     * Method to delete the account information based on the input mobile number.
+     *
+     * @param mobileNumber Input Mobile number value.
+     * @return ResponseDto with status to indicate the account deleted or not.
+     */
+    ResponseEntity<ResponseDto> deleteAccount(String mobileNumber);
 }

@@ -6,4 +6,6 @@ public interface AccountsConstants {
     String SAVINGS_ACCOUNT = "SAVINGS";
     String RECORDS_UPDATED = "Records updated successfully";
     String INSUFFICIENT_DATA = "Data update failed due to insufficient information";
+    String DELETION_SUCCESS = "Record deleted successfully";
+    String RECORD_NOT_FOUND = "Record not found for the given input";
 }
