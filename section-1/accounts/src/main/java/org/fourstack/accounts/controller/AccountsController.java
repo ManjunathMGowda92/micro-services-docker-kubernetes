@@ -9,6 +9,7 @@ import org.fourstack.accounts.service.AccountsService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,5 +49,10 @@ public class AccountsController {
     public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody CustomerDetailsDto dto,
                                                             @PathVariable long accountNumber) {
         return accountsService.updateAccount(dto, accountNumber);
+    }
+
+    @DeleteMapping("/delete-by-mobile/{mobileNumber}")
+    public ResponseEntity<ResponseDto> deleteAccount(@PathVariable String mobileNumber) {
+        return accountsService.deleteAccount(mobileNumber);
     }
 }

@@ -207,6 +207,27 @@ public class AccountsServiceImpl implements AccountsService {
         }
     }
 
+    /**
+     * Method to delete the account information based on the input mobile number.
+     *
+     * @param mobileNumber Input Mobile number value.
+     * @return ResponseDto with status to indicate the account deleted or not.
+     */
+    @Override
+    public ResponseEntity<ResponseDto> deleteAccount(String mobileNumber) {
+        Customer customer = retrieveCustomerByMobile(mobileNumber);
+        if (Objects.nonNull(customer)) {
+            // delete the account by using CustomerID.
+            accountsRepository.deleteByCustomerId(customer.getCustomerId());
+
+            // delete the customer entity by ID
+            customerRepository.deleteById(customer.getCustomerId());
+
+            return buildResponseEntity(HttpStatus.OK, AccountsConstants.DELETION_SUCCESS);
+        }
+        return buildResponseEntity(HttpStatus.NOT_FOUND, AccountsConstants.RECORD_NOT_FOUND);
+    }
+
 
     /**
      * Method to create a new account for a given cutsomer.
