@@ -2,6 +2,7 @@ package org.fourstack.accounts.service;
 
 import lombok.RequiredArgsConstructor;
 import org.fourstack.accounts.constants.AccountsConstants;
+import org.fourstack.accounts.dto.AccountsDto;
 import org.fourstack.accounts.dto.CustomerAccountRequestDto;
 import org.fourstack.accounts.dto.CustomerDetailsDto;
 import org.fourstack.accounts.dto.CustomerDto;
@@ -56,9 +57,33 @@ public class AccountsServiceImpl implements AccountsService {
         accountsRepository.save(createNewAccount(savedCustomer));
 
         // Return the Success Response
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ResponseDto(HttpStatus.CREATED.value(),
-                        HttpStatus.CREATED, AccountsConstants.ACCOUNT_CREATED));
+        return buildResponseEntity(HttpStatus.CREATED, AccountsConstants.ACCOUNT_CREATED);
+    }
+
+    /**
+     * Method to update the customer and account details.
+     *
+     * @param dto           Customer Update Request DTO object.
+     * @param accountNumber Account Number for which update is required.
+     * @return ResponseDto object with status updated or not.
+     */
+    @Override
+    public ResponseEntity<ResponseDto> updateAccount(CustomerDetailsDto dto, long accountNumber) {
+        AccountsDto accountInfo = dto.getAccountInfo();
+        if (Objects.nonNull(accountInfo)) {
+            Accounts accounts = accountsRepository.findById(accountNumber)
+                    .orElseThrow(() -> new ResourceNotFoundException("Account", "Account Number", accountNumber + ""));
+            accountsMapper.mapToAccounts(accountInfo, accounts);
+            accountsRepository.save(accounts);
+
+            Long customerId = accounts.getCustomerId();
+            Customer customer = customerRepository.findById(customerId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer", "CustomerID", customerId + ""));
+            customerMapper.mapToCustomer(dto.getCustomerInfo(), customer);
+            customerRepository.save(customer);
+            return buildResponseEntity(HttpStatus.OK, AccountsConstants.RECORDS_UPDATED);
+        }
+        return buildResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, AccountsConstants.INSUFFICIENT_DATA);
     }
 
     /**
@@ -199,5 +224,14 @@ public class AccountsServiceImpl implements AccountsService {
         accounts.setCreatedBy("Anonymous");
         accounts.setCreationTimestamp(LocalDateTime.now());
         return accounts;
+    }
+
+    private ResponseEntity<ResponseDto> buildResponseEntity(HttpStatus status, String statusMsg) {
+        return ResponseEntity.status(status)
+                .body(ResponseDto.builder()
+                        .status(status)
+                        .statusCode(status.value())
+                        .statusMsg(statusMsg)
+                        .build());
     }
 }
