@@ -19,6 +19,15 @@ public interface AccountsService {
     ResponseEntity<ResponseDto> createAccount(CustomerDto dto);
 
     /**
+     * Method to update the customer and account details.
+     *
+     * @param dto           Customer Update Request DTO object.
+     * @param accountNumber Account Number for which update is required.
+     * @return ResponseDto object with status updated or not.
+     */
+    ResponseEntity<ResponseDto> updateAccount(CustomerDetailsDto dto, long accountNumber);
+
+    /**
      * Method to retrieve the Customer details by mobile number provided.
      *
      * @param mobileNumber Input mobile number.

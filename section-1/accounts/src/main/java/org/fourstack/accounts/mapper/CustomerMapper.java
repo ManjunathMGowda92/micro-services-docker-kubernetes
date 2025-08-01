@@ -22,4 +22,10 @@ public class CustomerMapper {
         customer.setMobileNumber(dto.getMobileNumber());
         return customer;
     }
+
+    public void mapToCustomer(CustomerDto dto, Customer customer) {
+        customer.setName(dto.getName());
+        customer.setEmail(dto.getEmail());
+        customer.setMobileNumber(dto.getMobileNumber());
+    }
 }

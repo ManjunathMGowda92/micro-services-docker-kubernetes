@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +39,14 @@ public class AccountsController {
     }
 
     @PostMapping("/fetch-customer")
-    public ResponseEntity<CustomerDetailsDto> retrieveCompleteCustomerDetailsByMobile(@RequestBody CustomerAccountRequestDto dto) {
+    public ResponseEntity<CustomerDetailsDto> retrieveCompleteCustomerDetailsByMobile(
+            @RequestBody CustomerAccountRequestDto dto) {
         return accountsService.retrieveCompleteCustomerDetails(dto);
+    }
+
+    @PutMapping("/{accountNumber}")
+    public ResponseEntity<ResponseDto> updateAccountDetails(@RequestBody CustomerDetailsDto dto,
+                                                            @PathVariable long accountNumber) {
+        return accountsService.updateAccount(dto, accountNumber);
     }
 }

@@ -22,4 +22,9 @@ public class AccountsMapper {
         accounts.setBranchAddress(dto.getBranchAddress());
         return accounts;
     }
+
+    public void mapToAccounts(AccountsDto dto, Accounts accounts) {
+        accounts.setAccountType(dto.getAccountType());
+        accounts.setBranchAddress(dto.getBranchAddress());
+    }
 }
