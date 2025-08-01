@@ -39,6 +39,15 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleException(Exception exception, WebRequest request) {
+        String apiPath = request.getDescription(false);
+
+        ErrorResponseDto errorResponse= buildErrorResponse(exception.getMessage(), apiPath, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errorResponse);
+    }
+
     private ErrorResponseDto buildErrorResponse(String message, String path, HttpStatus status) {
         path = path.contains("uri=") ? path.substring(path.indexOf("uri=") + 4) : path;
         return ErrorResponseDto.builder()
