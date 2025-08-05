@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "cards")
 @Getter
@@ -18,7 +20,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Cards {
+public class Cards extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cardId;
@@ -29,4 +31,5 @@ public class Cards {
     private int totalLimit;
     private int amountUsed;
     private int availableAmount;
+    private LocalDate validTill;
 }
