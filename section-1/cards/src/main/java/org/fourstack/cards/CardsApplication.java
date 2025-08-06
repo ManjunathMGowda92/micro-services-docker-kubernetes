@@ -28,7 +28,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 		),
 		externalDocs = @ExternalDocumentation(
 				url = "https://fourstack-dev.in/cards-service",
-				description = "REST-API Documentation for Accounts-Service microservice"
+				description = "REST-API Documentation for Cards-Service microservice"
 		)
 )
 public class CardsApplication {
