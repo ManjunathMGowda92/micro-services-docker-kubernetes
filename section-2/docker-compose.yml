@@ -13,7 +13,7 @@ services:
       - network-routes  # Create a network communication for internal communication between services
 
   loans:
-    image: "fourstack/loans:1.0.0" # Specify the image name for loans
+    image: "manjunathgowda1992/loans:1.0.0" # Specify the image name for loans
     container_name: loans-service # Provide the container name to avoid random name generation
     ports:
       - "8070:8070"    # Expose the port of container to outside by port mapping
