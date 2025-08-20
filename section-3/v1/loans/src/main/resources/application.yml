@@ -27,3 +27,12 @@ app:
     author: Manjunath
     description: Loans Application
     version: "2.0.0"
+
+loans:
+  message: "Welcome to Loans service"
+  contactDetails:
+    name: "Manjunath"
+    email: "man1234@gmail.com"
+  onCallSupport:
+    - (001)111-1234
+    - (001)111-1235
