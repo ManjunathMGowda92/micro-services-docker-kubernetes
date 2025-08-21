@@ -1,6 +1,13 @@
 spring:
   application:
     name: cards
+  config:
+    import:
+      - "application-qa.yml"
+      - "application-prod.yml"
+  profiles:
+    active:
+      - "qa"
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -28,3 +35,4 @@ app:
     author: Manjunath
     description: Cards Application
     version: "2.0.0"
+    environment: "LOCAL"
