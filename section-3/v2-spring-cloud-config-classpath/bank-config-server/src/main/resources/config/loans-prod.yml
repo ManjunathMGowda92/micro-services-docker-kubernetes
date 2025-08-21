@@ -1,0 +1,16 @@
+app:
+  details:
+    name: loans-service
+    author: Manjunath
+    description: Loans Application - Config Server PROD
+    version: "2.0.0"
+    environment: "PROD"
+
+loans:
+  message: "Welcome to Loans service - Config Server PROD"
+  contactDetails:
+    name: "John"
+    email: "john1234@gmail.com"
+  onCallSupport:
+    - (001)555-5621
+    - (001)555-5623
