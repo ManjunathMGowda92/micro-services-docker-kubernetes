@@ -33,13 +33,15 @@ public class AppInfoController {
                     "author": "%s",
                     "description" : "%s",
                     "version" : "%s",
-                    "java-version" : "%s"
+                    "java-version" : "%s",
+                    "environment" : "%s"
                 }
                 """.formatted(environment.getProperty("app.details.name"),
                 environment.getProperty("app.details.author"),
                 environment.getProperty("app.details.description"),
                 environment.getProperty("app.details.version"),
-                environment.getProperty("JAVA_HOME"));
+                environment.getProperty("JAVA_HOME"),
+                environment.getProperty("app.details.environment"));
 
         return ResponseEntity.ok(appInfo);
     }
