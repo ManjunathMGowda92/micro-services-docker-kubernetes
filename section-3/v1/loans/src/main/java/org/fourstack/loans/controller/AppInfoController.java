@@ -34,10 +34,11 @@ public class AppInfoController {
                     "applicationName": "%s",
                     "author": "%s",
                     "description" : "%s",
-                    "version" : "%s"
+                    "version" : "%s",
+                    "environment": "%s"
                 }
                 """.formatted(appInfoConfig.getName(), appInfoConfig.getAuthor(),
-                appInfoConfig.getDescription(), appInfoConfig.getVersion());
+                appInfoConfig.getDescription(), appInfoConfig.getVersion(), appInfoConfig.getEnvironment());
 
         return ResponseEntity.ok(appInfo);
     }
