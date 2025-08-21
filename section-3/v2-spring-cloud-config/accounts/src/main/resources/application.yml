@@ -3,8 +3,9 @@ spring:
     name: accounts
   config:
     import:
-      - "application_qa.yml"
-      - "application_prod.yml"
+      - "application-qa.yml"
+      - "application-prod.yml"
+      - "optional:configserver:http://localhost:8071/"
   profiles:
     active:
       - "default"

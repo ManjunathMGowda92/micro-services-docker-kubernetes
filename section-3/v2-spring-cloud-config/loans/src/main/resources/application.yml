@@ -5,6 +5,7 @@ spring:
     import:
       - "application-qa.yml"
       - "application-prod.yml"
+      - "configserver:http://localhost:8071/"
   profiles:
     active:
       - "prod"
@@ -24,7 +25,7 @@ spring:
     show-sql: true
 
 server:
-  port: 8070
+  port: 9000
   servlet:
     context-path: /loans-service
 
