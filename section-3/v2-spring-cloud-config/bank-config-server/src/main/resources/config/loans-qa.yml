@@ -1,0 +1,16 @@
+app:
+  details:
+    name: loans-service
+    author: Manjunath
+    description: Loans Application - Config Server QA
+    version: "2.0.0"
+    environment: "QA"
+
+loans:
+  message: "Welcome to Loans service - Config Server QA"
+  contactDetails:
+    name: "Prakash"
+    email: "paraguprakash99@gmail.com"
+  onCallSupport:
+    - (001)333-7689
+    - (001)333-9876

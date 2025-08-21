@@ -1,18 +1,13 @@
-spring:
-  config:
-    activate:
-      on-profile: "prod"
-
 app:
   details:
     name: loans-service
     author: Manjunath
-    description: Loans Application
+    description: Loans Application - Config Server PROD
     version: "2.0.0"
     environment: "PROD"
 
 loans:
-  message: "Welcome to Loans service"
+  message: "Welcome to Loans service - Config Server PROD"
   contactDetails:
     name: "John"
     email: "john1234@gmail.com"

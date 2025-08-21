@@ -1,0 +1,7 @@
+app:
+  details:
+    name: accounts-service
+    author: Manjunath
+    description: Accounts Application - Config Server QA
+    version: "2.0.0"
+    environment: "QA"
