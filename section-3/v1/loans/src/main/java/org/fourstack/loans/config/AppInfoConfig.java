@@ -13,4 +13,5 @@ public class AppInfoConfig {
     private String author;
     private String description;
     private String version;
+    private String environment;
 }
