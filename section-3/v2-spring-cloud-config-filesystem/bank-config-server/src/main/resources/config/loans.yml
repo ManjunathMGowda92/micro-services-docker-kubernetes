@@ -1,0 +1,16 @@
+app:
+  details:
+    name: loans-service
+    author: Manjunath
+    description: Loans Application - Config Server DEFAULT
+    version: "2.0.0"
+    environment: "LOCAL"
+
+loans:
+  message: "Welcome to Loans service  - Config Server DEFAULT"
+  contactDetails:
+    name: "Manjunath"
+    email: "man1234@gmail.com"
+  onCallSupport:
+    - (001)111-1234
+    - (001)111-1235
