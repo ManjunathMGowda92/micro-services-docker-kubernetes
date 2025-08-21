@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: loans
+  config:
+    import:
+      - "application-qa.yml"
+      - "application-prod.yml"
+      - "configserver:http://localhost:8071/"
+  profiles:
+    active:
+      - "prod"
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 9000
+  servlet:
+    context-path: /loans-service
+
+app:
+  details:
+    name: loans-service
+    author: Manjunath
+    description: Loans Application
+    version: "2.0.0"
+    environment: "LOCAL"
+
+loans:
+  message: "Welcome to Loans service"
+  contactDetails:
+    name: "Manjunath"
+    email: "man1234@gmail.com"
+  onCallSupport:
+    - (001)111-1234
+    - (001)111-1235
