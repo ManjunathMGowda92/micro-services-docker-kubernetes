@@ -27,6 +27,9 @@ public class AppInfoController {
     @Value("${app.details.version}")
     private String version;
 
+    @Value("${app.details.environment}")
+    private String environmentName;
+
     @Operation(
             summary = "API to get the application information",
             description = "REST API to fetch the application information"
@@ -38,9 +41,10 @@ public class AppInfoController {
                     "applicationName": "%s",
                     "author": "%s",
                     "description" : "%s",
-                    "version" : "%s"
+                    "version" : "%s",
+                    "environment" : "%s"
                 }
-                """.formatted(applicationName, author, description, version);
+                """.formatted(applicationName, author, description, version, environmentName);
 
         return ResponseEntity.ok(appInfo);
     }

@@ -1,6 +1,13 @@
 spring:
   application:
     name: accounts
+  config:
+    import:
+      - "application_qa.yml"
+      - "application_prod.yml"
+  profiles:
+    active:
+      - "default"
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -27,3 +34,4 @@ app:
     author: Manjunath
     description: Accounts Application
     version: "2.0.0"
+    environment: "LOCAL"
