@@ -15,5 +15,8 @@ spring:
           clone-on-start: true # inform config server to clone the repo at the startup of application
           force-pull: true
 
+encrypt:
+  key: "20GM563HTJ98HRU18M03G25DA"
+
 server:
   port: 8071
