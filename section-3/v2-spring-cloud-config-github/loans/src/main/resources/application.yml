@@ -45,3 +45,9 @@ loans:
   onCallSupport:
     - (001)111-1234
     - (001)111-1235
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
