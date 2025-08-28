@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: bank-config-server
+  # provide the active profile as git (to inform the server to access git repository)
+  profiles:
+    active: git
+  # Add cloud config server search locations
+  cloud:
+    config:
+      server:
+        git:
+          uri: "https://github.com/ManjunathMGowda92/bank-app-config.git"
+          default-label: "main" #default branch to access.
+          timeout: 5 #Timeout configurations in seconds.
+          clone-on-start: true # inform config server to clone the repo at the startup of application
+          force-pull: true
+
+encrypt:
+  key: "20GM563HTJ98HRU18M03G25DA"
+
+server:
+  port: 8071
