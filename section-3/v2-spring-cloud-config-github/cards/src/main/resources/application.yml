@@ -37,3 +37,9 @@ app:
     description: Cards Application
     version: "2.0.0"
     environment: "LOCAL"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
