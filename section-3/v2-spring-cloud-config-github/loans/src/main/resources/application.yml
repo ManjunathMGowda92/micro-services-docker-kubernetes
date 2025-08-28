@@ -9,6 +9,11 @@ spring:
   profiles:
     active:
       - "prod"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "fourstack"
+    password: "stack4@2808"
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -50,4 +55,5 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include:
+          - "busrefresh"
