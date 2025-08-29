@@ -21,6 +21,12 @@ spring:
     username: "fourstack"
     password: "stack4@2808"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 encrypt:
   key: "20GM563HTJ98HRU18M03G25DA"
 
