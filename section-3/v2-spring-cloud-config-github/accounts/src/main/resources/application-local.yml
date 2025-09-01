@@ -1,6 +1,14 @@
 spring:
   application:
-    name: cards
+    name: accounts
+  config:
+    import:
+      - "application-qa.yml"
+      - "application-prod.yml"
+      - "optional:configserver:http://localhost:8071/"
+  profiles:
+    active:
+      - "default"
   rabbitmq:
     host: "localhost"
     port: 5672
@@ -22,16 +30,15 @@ spring:
     show-sql: true
 
 server:
-  port: 8090
+  port: 8080
   servlet:
-    context-path: /cards-service
-
+    context-path: /accounts-service
 
 app:
   details:
-    name: cards-service
+    name: accounts-service
     author: Manjunath
-    description: Cards Application
+    description: Accounts Application
     version: "2.0.0"
     environment: "LOCAL"
 
@@ -39,5 +46,4 @@ management:
   endpoints:
     web:
       exposure:
-        include:
-          - "busrefresh"
+        include: "*"
