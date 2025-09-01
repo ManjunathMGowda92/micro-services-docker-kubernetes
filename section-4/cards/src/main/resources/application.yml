@@ -1,6 +1,9 @@
 spring:
   application:
     name: cards
+  config:
+    import:
+      - "optional:configserver:http://localhost:8071/"
   rabbitmq:
     host: "localhost"
     port: 5672
@@ -8,15 +11,12 @@ spring:
     password: "stack4@2808"
 
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: ''
-  h2:
-    console:
-      enabled: true
+    url: jdbc:postgresql://localhost:5432/cards
+    driver-class-name: org.postgresql.Driver
+    username: fourstack
+    password: 'BankDbpSql@0109!'
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -33,7 +33,7 @@ app:
     author: Manjunath
     description: Cards Application
     version: "2.0.0"
-    environment: "LOCAL"
+    environment: "DEFAULT"
 
 management:
   endpoints:
