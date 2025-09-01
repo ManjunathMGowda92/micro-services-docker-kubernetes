@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: accounts
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "fourstack"
+    password: "stack4@2808"
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /accounts-service
+
+app:
+  details:
+    name: accounts-service
+    author: Manjunath
+    description: Accounts Application
+    version: "2.0.0"
+    environment: "LOCAL"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
