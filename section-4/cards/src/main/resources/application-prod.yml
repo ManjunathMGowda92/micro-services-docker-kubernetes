@@ -1,0 +1,12 @@
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+app:
+  details:
+    name: cards-service
+    author: Manjunath
+    description: Cards Application
+    version: "2.0.0"
+    environment: "PROD"
