@@ -1,6 +1,14 @@
 spring:
   application:
     name: cards
+  config:
+    import:
+      - "application-qa.yml"
+      - "application-prod.yml"
+      - "configserver:http://localhost:8071/"
+  profiles:
+    active:
+      - "qa"
   rabbitmq:
     host: "localhost"
     port: 5672

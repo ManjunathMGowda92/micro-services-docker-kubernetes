@@ -1,5 +1,5 @@
 # Import the base image for JDK.
-FROM eclipse-temurin:21.0.8_9-jre-ubi10-minimal
+FROM amazoncorretto:21.0.8
 
 # Label the maintainer
 LABEL org.fourstack.image.authors="manjunathcs052@gmail.com"

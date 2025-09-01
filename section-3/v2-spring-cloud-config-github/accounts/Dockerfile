@@ -1,5 +1,5 @@
 # Import the base image required for JDK. (OpenJDK is deprecated, so using amazon corretto image)
-FROM amazoncorretto:21-alpine-jdk
+FROM amazoncorretto:21.0.8
 
 # We can specify the maintainer for the image which we are going to build (MAINTAINER is deprecated, so use LABEL)
 LABEL org.fourstack.image.authors="manjunathcs052@gmail.com"

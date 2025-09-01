@@ -1,14 +1,6 @@
 spring:
   application:
     name: loans
-  config:
-    import:
-      - "application-qa.yml"
-      - "application-prod.yml"
-      - "configserver:http://localhost:8071/"
-  profiles:
-    active:
-      - "prod"
   rabbitmq:
     host: "localhost"
     port: 5672
