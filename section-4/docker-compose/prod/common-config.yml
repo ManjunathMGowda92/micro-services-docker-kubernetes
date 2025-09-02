@@ -11,6 +11,8 @@ services:
       service: network-deploy-service
     environment:
       SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_USERNAME: "rabbit_prod"
+      SPRING_RABBITMQ_PASSWORD: "r@bbItProd!0109"
     deploy:
       resources:
         limits:

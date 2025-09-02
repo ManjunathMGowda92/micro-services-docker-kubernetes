@@ -1,5 +1,67 @@
 name: banking-services
 services:
+  accounts-db:
+    image: postgres:latest
+    container_name: accounts-postgres-db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    environment:
+      POSTGRES_DB: "accounts"
+      POSTGRES_USER: "accounts_admin"
+      POSTGRES_PASSWORD: "PSqlbanks@1942$"
+    volumes:
+      - ./accounts_data:/var/lib/postgresql/data
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  loans-db:
+    image: postgres:latest
+    container_name: loans-postgres-db
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    environment:
+      POSTGRES_DB: "loans"
+      POSTGRES_USER: "loans_admin"
+      POSTGRES_PASSWORD: "PSqlbanks@1942$"
+    volumes:
+      - ./loans_data:/var/lib/postgresql/data
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+  cards-db:
+    image: postgres:latest
+    container_name: cards-postgres-db
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    environment:
+      POSTGRES_DB: "cards"
+      POSTGRES_USER: "cards_admin"
+      POSTGRES_PASSWORD: "PSqlbanks@1942$"
+    volumes:
+      - ./cards_data:/var/lib/postgresql/data
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   rabbitmq:
     image: rabbitmq:3-management
     hostname: banking-config-mq
@@ -8,7 +70,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -21,7 +83,7 @@ services:
       service: network-deploy-service
 
   banking-config-server:
-    image: "manjunathgowda1992/banking-config-server:5.0.0" # Specify the image for config-server
+    image: "manjunathgowda1992/banking-config-server:6.0.0" # Specify the image for config-server
     container_name: banking-config-server # Provide container name to avoid random name generation
     ports:
       - "8071:8071"  # Expose the port of container to outside by port mapping
@@ -34,50 +96,65 @@ services:
       timeout: 5s
       retries: 10
       start_period: 10s  # mention after how much time of container start the curl need to be executed
-    environment:  # Environment properties
+    environment: # Environment properties
       SPRING_APPLICATION_NAME: "bank-config-server"
     extends:
       file: common-config.yml
       service: microservice-base-config
 
   accounts:
-    image: "manjunathgowda1992/accounts:5.0.0" # Specify the image name for accounts
+    image: "manjunathgowda1992/accounts:6.0.0" # Specify the image name for accounts
     container_name: accounts-service  # Provide the container name to avoid random name generation
     ports:
       - "8080:8080"  # Expose the port of container to outside by port mapping
     depends_on:
       banking-config-server:
         condition: service_healthy # mention the accounts service to wait till config server is completely up and running
+      accounts-db:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "accounts"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://accounts-db:5432/accounts"
+      SPRING_DATASOURCE_USERNAME: "accounts_admin"
+      SPRING_DATASOURCE_PASSWORD: "PSqlbanks@1942$"
     extends:
       file: common-config.yml
       service: config-server-config
 
   loans:
-    image: "manjunathgowda1992/loans:5.0.0" # Specify the image name for loans
+    image: "manjunathgowda1992/loans:6.0.0" # Specify the image name for loans
     container_name: loans-service # Provide the container name to avoid random name generation
     ports:
-      - "9000:9000"    # Expose the port of container to outside by port mapping
+      - "9000:9000"
     depends_on:
       banking-config-server:
-        condition: service_healthy # mention the loans service to wait till config server is completely up and running
+        condition: service_healthy
+      loans-db:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "loans"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://loans-db:5432/loans #inside network the port will be same as container port.
+      SPRING_DATASOURCE_USERNAME: "loans_admin"
+      SPRING_DATASOURCE_PASSWORD: "PSqlbanks@1942$"
     extends:
       file: common-config.yml
       service: config-server-config
 
   cards:
-    image: "manjunathgowda1992/cards:5.0.0" # Specify the image name for cards
+    image: "manjunathgowda1992/cards:6.0.0" # Specify the image name for cards
     container_name: cards-service  # Provide the container name to avoid random name generation
     ports:
       - "8090:8090"  # Expose the port of container to outside by port mapping
     depends_on:
       banking-config-server:
         condition: service_healthy # mention the cards service to wait till config server is completely up and running
+      cards-db:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cards"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://cards-db:5432/cards"
+      SPRING_DATASOURCE_USERNAME: "cards_admin"
+      SPRING_DATASOURCE_PASSWORD: "PSqlbanks@1942$"
     extends:
       file: common-config.yml
       service: config-server-config
