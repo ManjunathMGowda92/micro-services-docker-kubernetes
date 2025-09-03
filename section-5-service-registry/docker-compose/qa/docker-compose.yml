@@ -28,8 +28,6 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-      postgres:
-        condition: service_healthy
     healthcheck: # To perform the health check of the container
       test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
