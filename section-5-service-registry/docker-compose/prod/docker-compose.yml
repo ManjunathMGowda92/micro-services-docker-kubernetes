@@ -1,67 +1,5 @@
 name: banking-services
 services:
-  accounts-db:
-    image: postgres:latest
-    container_name: accounts-postgres-db
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-    environment:
-      POSTGRES_DB: "accounts"
-      POSTGRES_USER: "accounts_admin"
-      POSTGRES_PASSWORD: "PSqlbanks@1942$"
-    volumes:
-      - ./accounts_data:/var/lib/postgresql/data
-    extends:
-      file: common-config.yml
-      service: network-deploy-service
-
-  loans-db:
-    image: postgres:latest
-    container_name: loans-postgres-db
-    ports:
-      - "5433:5432"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-    environment:
-      POSTGRES_DB: "loans"
-      POSTGRES_USER: "loans_admin"
-      POSTGRES_PASSWORD: "PSqlbanks@1942$"
-    volumes:
-      - ./loans_data:/var/lib/postgresql/data
-    extends:
-      file: common-config.yml
-      service: network-deploy-service
-  cards-db:
-    image: postgres:latest
-    container_name: cards-postgres-db
-    ports:
-      - "5434:5432"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-    environment:
-      POSTGRES_DB: "cards"
-      POSTGRES_USER: "cards_admin"
-      POSTGRES_PASSWORD: "PSqlbanks@1942$"
-    volumes:
-      - ./cards_data:/var/lib/postgresql/data
-    extends:
-      file: common-config.yml
-      service: network-deploy-service
-
   rabbitmq:
     image: rabbitmq:3-management
     hostname: banking-config-mq
@@ -114,9 +52,6 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://accounts-db:5432/accounts"
-      SPRING_DATASOURCE_USERNAME: "accounts_admin"
-      SPRING_DATASOURCE_PASSWORD: "PSqlbanks@1942$"
     extends:
       file: common-config.yml
       service: config-server-config
@@ -133,9 +68,6 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "loans"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://loans-db:5432/loans #inside network the port will be same as container port.
-      SPRING_DATASOURCE_USERNAME: "loans_admin"
-      SPRING_DATASOURCE_PASSWORD: "PSqlbanks@1942$"
     extends:
       file: common-config.yml
       service: config-server-config
@@ -152,9 +84,6 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cards"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://cards-db:5432/cards"
-      SPRING_DATASOURCE_USERNAME: "cards_admin"
-      SPRING_DATASOURCE_PASSWORD: "PSqlbanks@1942$"
     extends:
       file: common-config.yml
       service: config-server-config
