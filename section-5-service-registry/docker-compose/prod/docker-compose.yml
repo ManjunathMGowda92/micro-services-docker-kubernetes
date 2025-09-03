@@ -48,8 +48,6 @@ services:
     depends_on:
       banking-config-server:
         condition: service_healthy # mention the accounts service to wait till config server is completely up and running
-      accounts-db:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "accounts"
     extends:
@@ -63,8 +61,6 @@ services:
       - "9000:9000"
     depends_on:
       banking-config-server:
-        condition: service_healthy
-      loans-db:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "loans"
@@ -80,8 +76,6 @@ services:
     depends_on:
       banking-config-server:
         condition: service_healthy # mention the cards service to wait till config server is completely up and running
-      cards-db:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cards"
     extends:
