@@ -1,0 +1,28 @@
+services:
+  # Create a common service for networks which can be reused
+  network-deploy-service:
+    networks:
+      - app-routes # Create a network communication for internal communication between services
+
+  # Create a base config service for microservices by extending network-deploy-service
+  # This will include the common configuration used by the microservices.
+  microservice-base-config:
+    extends:
+      service: network-deploy-service
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_RABBITMQ_USERNAME: "rabbit_prod"
+      SPRING_RABBITMQ_PASSWORD: "r@bbItProd!0109"
+    deploy:
+      resources:
+        limits:
+          memory: 700m # Restrict the memory usage of container to 700MB
+
+
+  # Create common service for config-server environment property, which needs to be used by accounts, loans and cards.
+  config-server-config:
+    extends:
+      service: microservice-base-config
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_CONFIG_IMPORT: "configserver:http://banking-config-server:8071/"
