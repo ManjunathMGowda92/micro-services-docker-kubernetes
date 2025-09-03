@@ -1,28 +1,5 @@
 name: banking-services
 services:
-  postgres:
-    image: postgres:latest
-    container_name: my-postgres-db
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fourstack"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
-      start_period: 10s
-    environment:
-      POSTGRES_DB: "fourstack"
-      POSTGRES_USER: "fourstack"
-      POSTGRES_PASSWORD: "BankDbpSql@0109!"
-      POSTGRES_MULTIPLE_DATABASES: accounts,loans,cards
-    volumes:
-      - ./init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
-      - ./postgres_data:/var/lib/postgresql/data
-    extends:
-      file: common-config.yml
-      service: network-deploy-service
-
   rabbitmq:
     image: rabbitmq:3-management
     hostname: banking-config-mq
@@ -75,7 +52,6 @@ services:
         condition: service_healthy # mention the accounts service to wait till config server is completely up and running
     environment:
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/accounts"
     extends:
       file: common-config.yml
       service: config-server-config
@@ -90,7 +66,6 @@ services:
         condition: service_healthy # mention the loans service to wait till config server is completely up and running
     environment:
       SPRING_APPLICATION_NAME: "loans"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/loans"
     extends:
       file: common-config.yml
       service: config-server-config
@@ -105,7 +80,6 @@ services:
         condition: service_healthy # mention the cards service to wait till config server is completely up and running
     environment:
       SPRING_APPLICATION_NAME: "cards"
-      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/cards"
     extends:
       file: common-config.yml
       service: config-server-config

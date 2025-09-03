@@ -11,10 +11,10 @@ spring:
     password: "stack4@2808"
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/cards
+    url: jdbc:postgresql://postgres-aws.cz8a0smi84bm.ap-south-1.rds.amazonaws.com:5432/cards
     driver-class-name: org.postgresql.Driver
-    username: fourstack
-    password: 'BankDbpSql@0109!'
+    username: postgres_aws
+    password: 'B$56lueMo789nk!'
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
