@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: cards
+  config:
+    import:
+      - "optional:configserver:http://localhost:8071/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "fourstack"
+    password: "stack4@2808"
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cards
+    driver-class-name: org.postgresql.Driver
+    username: fourstack
+    password: 'BankDbpSql@0109!'
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8090
+  servlet:
+    context-path: /cards-service
+
+
+app:
+  details:
+    name: cards-service
+    author: Manjunath
+    description: Cards Application
+    version: "2.0.0"
+    environment: "DEFAULT"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "busrefresh"
