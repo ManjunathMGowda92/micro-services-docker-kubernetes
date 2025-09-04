@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -97,6 +98,15 @@ public class GlobalExceptionHandler {
                 .fieldName(fieldName)
                 .rejectedValue(rejectedValue)
                 .build();
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(NoResourceFoundException exception, WebRequest request) {
+        String apiPath = request.getDescription(false);
+
+        ErrorResponseDto errorResponse = buildErrorResponse("URL not mapped : " + exception.getMessage(), apiPath, HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
