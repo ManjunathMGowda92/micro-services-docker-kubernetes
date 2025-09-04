@@ -16,11 +16,19 @@ services:
         limits:
           memory: 700m # Restrict the memory usage of container to 700MB
 
-
-  # Create common service for config-server environment property, which needs to be used by accounts, loans and cards.
-  config-server-config:
+  microservice-config-server:
     extends:
       service: microservice-base-config
     environment:
-      SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: "configserver:http://banking-config-server:8071/"
+
+
+
+  # Create common service for config-server environment property, which needs to be used by accounts, loans and cards.
+  application-services-config:
+    extends:
+      service: microservice-config-server
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      EUREKA_INSTANCE_HOSTNAME: discovery-server
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://discovery-server:8761/eureka/"
