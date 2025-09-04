@@ -6,12 +6,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(name = "Customer-Account Details", description = "Schema to hold Customer and Accounts information")
-public class CustomerDetailsDto {
+@Schema(name = "CustomerDetails", description = "Schema to hold Customer, Accounts, Loans and Cards information")
+public class CompleteCustomerDetailsDto {
     private CustomerDto customerInfo;
     private AccountsDto accountInfo;
+    private List<LoansDto> loans;
+    private List<CardsDto> cards;
 }
