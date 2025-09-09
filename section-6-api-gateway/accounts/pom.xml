@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.fourstack</groupId>
 	<artifactId>accounts</artifactId>
-	<version>2.0.0</version>
+	<version>8.0.0</version>
 	<name>accounts</name>
 	<description>Spring Boot application for Accounts</description>
 	<url/>
@@ -123,6 +123,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+                    <image>
+                        <name>manjunathgowda1992/${project.artifactId}:${project.version}</name>
+                    </image>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

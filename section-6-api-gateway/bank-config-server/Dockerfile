@@ -1,5 +1,5 @@
 # Add base image for Java
-FROM amazoncorretto:21.0.8
+FROM amazoncorretto:21.0.8-al2023-headless
 
 # Specify the author details
 LABEL org.fourstack.image.authors="manjunathcs052@gmail.com"
