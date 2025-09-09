@@ -1,5 +1,5 @@
 # Add base image for JDK
-FROM amazoncorretto:21.0.8
+FROM amazoncorretto:21.0.8-al2023-headless
 
 # Specify the maintainer of image
 LABEL org.fourstack.image.authors="manjunathcs052@gmail.com"

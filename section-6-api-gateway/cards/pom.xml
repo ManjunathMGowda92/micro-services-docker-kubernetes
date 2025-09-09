@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.fourstack</groupId>
 	<artifactId>cards</artifactId>
-	<version>2.0.0</version>
+	<version>8.0.0</version>
 	<name>cards</name>
 	<description>Spring Boot application for Cards</description>
 	<url/>
@@ -112,6 +112,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+                    <image>
+                        <name>manjunathgowda1992/${project.artifactId}:${project.version}</name>
+                    </image>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -120,16 +123,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.6</version>
-                <configuration>
-                    <to>
-                        <image>manjunathgowda1992/${project.artifactId}:${project.version}</image>
-                    </to>
-                </configuration>
-            </plugin>
 		</plugins>
 	</build>
 

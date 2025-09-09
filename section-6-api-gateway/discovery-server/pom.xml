@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.fourstack</groupId>
 	<artifactId>discovery-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>8.0.0</version>
 	<name>discovery-server</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -67,6 +67,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>manjunathgowda1992/${project.artifactId}:${project.version}</name>
+                    </image>
+                </configuration>
 			</plugin>
 		</plugins>
 	</build>
