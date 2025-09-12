@@ -32,3 +32,9 @@ info:
     name: "Gateway-server"
     description: "Gateway server application"
     version: "1.0.0"
+
+logging:
+  level:
+    org:
+      fourstack:
+        gatewayserver: debug

@@ -25,7 +25,7 @@ services:
   # Create common service for config-server environment property, which needs to be used by accounts, loans and cards.
   application-services-config:
     extends:
-      service: microservice-base-config
+      service: microservice-config-server
     environment:
       SPRING_PROFILES_ACTIVE: qa
       EUREKA_INSTANCE_HOSTNAME: discovery-server

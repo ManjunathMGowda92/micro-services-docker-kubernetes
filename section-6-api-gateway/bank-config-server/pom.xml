@@ -69,7 +69,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
-                        <name>manjunathgowda1992/${project.artifactId}:${project.version}</name>
+                        <name>manjunathgowda1992/banking-config-server:${project.version}</name>
                     </image>
                 </configuration>
 			</plugin>

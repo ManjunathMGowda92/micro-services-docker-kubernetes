@@ -20,6 +20,10 @@ public class RouteConfig {
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://ACCOUNTS"))
                 .route(apiPath -> apiPath
+                        .path("/bank-app/customers/**")
+                        .filters(api -> api.rewritePath("/bank-app/customers/(?<segment>.*)", "/accounts-service/api/v1/customers/${segment}"))
+                        .uri("lb://ACCOUNTS"))
+                .route(apiPath -> apiPath
                         .path("/bank-app/loans/**")
                         .filters(api -> api.rewritePath("/bank-app/loans/(?<segment>.*)", "/loans-service/api/v1/loans/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
