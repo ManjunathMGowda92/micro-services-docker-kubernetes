@@ -137,11 +137,11 @@ public class CustomerServiceImpl implements CustomerService{
         CompleteCustomerDetailsDto dto = new CompleteCustomerDetailsDto();
         dto.setCustomerInfo(customerMapper.mapToCustomerDto(customer));
         dto.setAccountInfo(accountsMapper.mapToAccountsDto(accounts));
-        if (cardsResponse.getStatusCode().is2xxSuccessful()) {
+        if (null != cardsResponse && cardsResponse.getStatusCode().is2xxSuccessful()) {
             dto.setCards(cardsResponse.getBody());
         }
 
-        if (loansResponse.getStatusCode().is2xxSuccessful()) {
+        if (null != loansResponse && loansResponse.getStatusCode().is2xxSuccessful()) {
             dto.setLoans(loansResponse.getBody());
         }
 

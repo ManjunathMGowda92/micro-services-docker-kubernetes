@@ -11,6 +11,9 @@ spring:
             locator:
               enabled: false
               lower-case-service-id: true
+          httpclient:
+            connect-timeout: 1000
+            response-timeout: 2s
 
 server:
   port: 9100
@@ -38,3 +41,12 @@ logging:
     org:
       fourstack:
         gatewayserver: debug
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        permitted-number-of-calls-in-half-open-state: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
