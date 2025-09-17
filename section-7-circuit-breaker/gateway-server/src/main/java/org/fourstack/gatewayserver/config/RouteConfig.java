@@ -1,11 +1,13 @@
 package org.fourstack.gatewayserver.config;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.cloud.gateway.support.RouteMetadataUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Configuration
@@ -28,12 +30,20 @@ public class RouteConfig {
                         .filters(api -> api.rewritePath("/bank-app/customers/(?<segment>.*)", "/accounts-service/api/v1/customers/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
                                 .circuitBreaker(config -> config.setName("customerCircuitBreaker")
-                                        .setFallbackUri("forward:/contactSupport")))
+                                        .setFallbackUri("forward:/contactSupport"))
+                                .retry(retryConfig -> retryConfig.setRetries(4)
+                                        .setBackoff(Duration.ofMillis(500), Duration.ofMillis(2000), 2, true)
+                                        .setMethods(HttpMethod.GET)))
+                        .metadata(RouteMetadataUtils.RESPONSE_TIMEOUT_ATTR, 2000)
+                        .metadata(RouteMetadataUtils.CONNECT_TIMEOUT_ATTR, 1000)
                         .uri("lb://ACCOUNTS"))
                 .route(apiPath -> apiPath
                         .path("/bank-app/loans/**")
                         .filters(api -> api.rewritePath("/bank-app/loans/(?<segment>.*)", "/loans-service/api/v1/loans/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+                                .retry(retryConfig -> retryConfig.setRetries(4)
+                                        .setBackoff(Duration.ofMillis(500), Duration.ofMillis(2000), 2, true)
+                                        .setMethods(HttpMethod.GET)))
                         .uri("lb://LOANS"))
                 .route(apiPath -> apiPath
                         .path("/bank-app/cards/**")

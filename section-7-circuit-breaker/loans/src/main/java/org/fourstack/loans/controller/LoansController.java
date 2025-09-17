@@ -12,6 +12,8 @@ import org.fourstack.loans.dto.LoanCreateRequestDto;
 import org.fourstack.loans.dto.LoansDto;
 import org.fourstack.loans.dto.ResponseDto;
 import org.fourstack.loans.service.LoansService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Lazy)
 @Validated
 public class LoansController {
+    private static final Logger logger = LoggerFactory.getLogger(LoansController.class);
     private final LoansService service;
 
     @Operation(
@@ -60,8 +63,8 @@ public class LoansController {
     public ResponseEntity<List<LoansDto>> retrieveLoan(
             @PathVariable @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
             String mobileNumber) {
+        logger.info("Fetching loan details based on mobile number : {}", mobileNumber);
         return service.retrieveLoan(mobileNumber);
-
     }
 
     @Operation(
@@ -92,7 +95,6 @@ public class LoansController {
     public ResponseEntity<ResponseDto> updateLoan(@RequestBody @Valid LoansDto dto,
                                                   @PathVariable String loanNumber) {
         return service.updateLoan(dto, loanNumber);
-
     }
 
 
