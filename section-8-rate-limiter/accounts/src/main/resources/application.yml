@@ -1,0 +1,94 @@
+spring:
+  application:
+    name: accounts
+  config:
+    import:
+      - "optional:configserver:http://localhost:8071/"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "fourstack"
+    password: "stack4@2808"
+  datasource:
+    url: jdbc:postgresql://postgres-aws.cz8a0smi84bm.ap-south-1.rds.amazonaws.com:5432/accounts
+    driver-class-name: org.postgresql.Driver
+    username: postgres_aws
+    password: 'B$56lueMo789nk!'
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /accounts-service
+
+app:
+  details:
+    name: accounts-service
+    author: Manjunath
+    description: Accounts Application
+    version: "2.0.0"
+    environment: "DEFAULT"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      access: UNRESTRICTED
+    health:
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+
+# These are arbitrary properties
+info:
+  app:
+    name: "accounts"
+    description: "Accounts Application service"
+    version: "1.0.0"
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        permitted-number-of-calls-in-half-open-state: 2
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+  retry:
+    configs:
+      default:
+        max-attempts: 4
+        wait-duration: 500
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        exponential-max-wait-duration: 3000
+        ignoreExceptions:
+          - java.lang.NullPointerException
