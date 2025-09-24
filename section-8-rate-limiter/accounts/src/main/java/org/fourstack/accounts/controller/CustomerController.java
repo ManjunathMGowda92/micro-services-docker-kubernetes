@@ -1,5 +1,6 @@
 package org.fourstack.accounts.controller;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -68,6 +69,7 @@ public class CustomerController {
             }
     )
     @Retry(name = "retrieveDetailsByMobileNumber", fallbackMethod = "retrieveDetailsByMobileNumberFallback")
+    @RateLimiter(name = "retrieveDetailsByMobileNumber", fallbackMethod = "retrieveDetailsByMobileNumberRateLimitFallback")
     @GetMapping("/fetch-by-mobile/{mobileNumber}")
     public ResponseEntity<CustomerDto> retrieveDetailsByMobileNumber(
             @PathVariable @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
@@ -82,6 +84,17 @@ public class CustomerController {
         CustomerDto dummyResponse = CustomerDto.builder().mobileNumber(mobileNumber)
                 .email("dummy@gmail.com")
                 .name("Dummy Response")
+                .build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(dummyResponse);
+    }
+
+    public ResponseEntity<CustomerDto> retrieveDetailsByMobileNumberRateLimitFallback(String mobileNumber, Throwable throwable) {
+        logger.error("Executing RateLimiter Fallback mechanism for retrieveDetailsByMobileNumber :{} due to exception",
+                mobileNumber);
+        CustomerDto dummyResponse = CustomerDto.builder().mobileNumber(mobileNumber)
+                .email("ratelimitExec@gmail.com")
+                .name("RateLimiter Response")
                 .build();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(dummyResponse);

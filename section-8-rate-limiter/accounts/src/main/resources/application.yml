@@ -85,10 +85,16 @@ resilience4j:
   retry:
     configs:
       default:
-        max-attempts: 4
+        max-attempts: 1
         wait-duration: 500
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
         exponential-max-wait-duration: 3000
         ignoreExceptions:
           - java.lang.NullPointerException
+  ratelimiter:
+    configs:
+      default:
+        timeout-duration: 1000  # Time duration a thread can wait for token bucket to get refreshed before it get expire
+        limit-refresh-period: 5000 # Time in millis to refresh the token bucket
+        limit-for-period: 1   # Number of tokens allowed for the specified period.

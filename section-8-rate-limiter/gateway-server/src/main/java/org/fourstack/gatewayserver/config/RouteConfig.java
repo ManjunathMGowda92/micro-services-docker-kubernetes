@@ -1,5 +1,8 @@
 package org.fourstack.gatewayserver.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
+import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.gateway.support.RouteMetadataUtils;
@@ -12,6 +15,12 @@ import java.time.LocalDateTime;
 
 @Configuration
 public class RouteConfig {
+
+    @Autowired
+    private KeyResolver keyResolver;
+
+    @Autowired
+    private RedisRateLimiter rateLimiter;
 
     @Bean
     public RouteLocator bankRouteLocator(RouteLocatorBuilder builder) {
@@ -52,8 +61,11 @@ public class RouteConfig {
                         )
                         .uri("lb://LOANS"))
                 .route(apiPath -> apiPath.path("/bank-app/cards/**")
-                        .filters(api -> api.rewritePath("/bank-app/cards/(?<segment>.*)", "/cards-service/api/v1/cards/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                        .filters(api -> api.rewritePath("/bank-app/cards/info", "/cards-service/cards/info")
+                                .rewritePath("/bank-app/cards/(?<segment>.*)", "/cards-service/api/v1/cards/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+                                .requestRateLimiter(config -> config.setKeyResolver(keyResolver)
+                                        .setRateLimiter(rateLimiter)))
                         .uri("lb://CARDS"))
                 .build();
     }
