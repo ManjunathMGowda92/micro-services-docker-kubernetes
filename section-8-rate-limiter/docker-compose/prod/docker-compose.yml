@@ -1,5 +1,18 @@
 name: banking-services
 services:
+  redis:
+    image: redis:latest
+    container_name: banking-redis-server
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      timeout: 10s
+      retries: 10
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   rabbitmq:
     image: rabbitmq:3-management
     hostname: banking-config-mq
@@ -21,7 +34,7 @@ services:
       service: network-deploy-service
 
   banking-config-server:
-    image: "manjunathgowda1992/banking-config-server:8.0.0" # Specify the image for config-server
+    image: "rmg1992/banking-config-server:9.0.0" # Specify the image for config-server
     container_name: banking-config-server # Provide container name to avoid random name generation
     ports:
       - "8071:8071"  # Expose the port of container to outside by port mapping
@@ -41,7 +54,7 @@ services:
       service: microservice-base-config
 
   discovery-server:
-    image: "manjunathgowda1992/discovery-server:8.0.0"
+    image: "rmg1992/discovery-server:9.0.0"
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -61,7 +74,7 @@ services:
       service: microservice-config-server
 
   accounts:
-    image: "manjunathgowda1992/accounts:8.0.0" # Specify the image name for accounts
+    image: "rmg1992/accounts:9.0.0" # Specify the image name for accounts
     container_name: accounts-service  # Provide the container name to avoid random name generation
     ports:
       - "8080:8080"  # Expose the port of container to outside by port mapping
@@ -81,7 +94,7 @@ services:
       service: application-services-config
 
   loans:
-    image: "manjunathgowda1992/loans:8.0.0" # Specify the image name for loans
+    image: "rmg1992/loans:9.0.0" # Specify the image name for loans
     container_name: loans-service # Provide the container name to avoid random name generation
     ports:
       - "9000:9000"
@@ -101,7 +114,7 @@ services:
       service: application-services-config
 
   cards:
-    image: "manjunathgowda1992/cards:8.0.0" # Specify the image name for cards
+    image: "rmg1992/cards:9.0.0" # Specify the image name for cards
     container_name: cards-service  # Provide the container name to avoid random name generation
     ports:
       - "8090:8090"  # Expose the port of container to outside by port mapping
@@ -121,7 +134,7 @@ services:
       service: application-services-config
 
   gateway-server:
-    image: "manjunathgowda1992/gateway-server:8.0.0"
+    image: "rmg1992/gateway-server:9.0.0"
     container_name: gateway-server
     ports:
       - "9100:9100"
@@ -132,8 +145,14 @@ services:
         condition: service_healthy
       cards:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "gateway-server"
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
+      SPRING_DATA_REDIS_TIMEOUT: 1s
     extends:
       file: common-config.yml
       service: application-services-config
