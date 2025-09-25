@@ -1,0 +1,169 @@
+name: banking-services
+services:
+  redis:
+    image: redis:latest
+    container_name: banking-redis-server
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      timeout: 10s
+      retries: 10
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: banking-config-mq
+    container_name: banking-rabbit-mq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    environment:
+      RABBITMQ_DEFAULT_USER: "fourstack"
+      RABBITMQ_DEFAULT_PASS: "stack4@2808"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  banking-config-server:
+    image: "rmg1992/banking-config-server:9.0.0" # Specify the image for config-server
+    container_name: banking-config-server # Provide container name to avoid random name generation
+    ports:
+      - "8071:8071"  # Expose the port of container to outside by port mapping
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck: # To perform the health check of the container
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s  # mention after how much time of container start the curl need to be executed
+    environment:  # Environment properties
+      SPRING_APPLICATION_NAME: "bank-config-server"
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
+  discovery-server:
+    image: "rmg1992/discovery-server:9.0.0"
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      banking-config-server:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8761/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      SPRING_APPLICATION_NAME: "discovery-server"
+    extends:
+      file: common-config.yml
+      service: microservice-config-server
+
+  accounts:
+    image: "rmg1992/accounts:9.0.0" # Specify the image name for accounts
+    container_name: accounts-service  # Provide the container name to avoid random name generation
+    ports:
+      - "8080:8080"  # Expose the port of container to outside by port mapping
+    depends_on:
+      banking-config-server:
+        condition: service_healthy # mention the accounts service to wait till config server is completely up and running
+      discovery-server:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/accounts-service/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"
+    extends:
+      file: common-config.yml
+      service: application-services-config
+
+  loans:
+    image: "rmg1992/loans:9.0.0" # Specify the image name for loans
+    container_name: loans-service # Provide the container name to avoid random name generation
+    ports:
+      - "9000:9000"    # Expose the port of container to outside by port mapping
+    depends_on:
+      banking-config-server:
+        condition: service_healthy # mention the loans service to wait till config server is completely up and running
+      discovery-server:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9000/loans-service/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+    extends:
+      file: common-config.yml
+      service: application-services-config
+
+  cards:
+    image: "rmg1992/cards:9.0.0" # Specify the image name for cards
+    container_name: cards-service  # Provide the container name to avoid random name generation
+    ports:
+      - "8090:8090"  # Expose the port of container to outside by port mapping
+    depends_on:
+      banking-config-server:
+        condition: service_healthy # mention the cards service to wait till config server is completely up and running
+      discovery-server:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/cards-service/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+    extends:
+      file: common-config.yml
+      service: application-services-config
+
+  gateway-server:
+    image: "rmg1992/gateway-server:9.0.0"
+    container_name: "gateway-server"
+    ports:
+      - "9100:9100"
+    depends_on:
+      accounts:
+        condition: service_healthy
+      loans:
+        condition: service_healthy
+      cards:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "gateway-server"
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
+      SPRING_DATA_REDIS_TIMEOUT: 1s
+    extends:
+      file: common-config.yml
+      service: application-services-config
+
+# Define the network communication routes
+networks:
+  app-routes:
+    driver: "bridge"
