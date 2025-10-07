@@ -32,26 +32,25 @@ services:
       - sh
       - -euc
       - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy 
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-        EOF
         /run.sh
     image: grafana/grafana:latest
+    volumes:
+      - ../observability/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
     ports:
       - "3000:3000"
     depends_on:
       - loki
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     extends:
       file: common-config.yml
       service: network-deploy-service
@@ -90,7 +89,7 @@ services:
       service: network-deploy-service
 
   banking-config-server:
-    image: "rmg1992/banking-config-server:10.0.0" # Specify the image for config-server
+    image: "rmg1992/banking-config-server:11.0.0" # Specify the image for config-server
     container_name: banking-config-server # Provide container name to avoid random name generation
     ports:
       - "8071:8071"  # Expose the port of container to outside by port mapping
@@ -110,7 +109,7 @@ services:
       service: microservice-base-config
 
   discovery-server:
-    image: "rmg1992/discovery-server:10.0.0"
+    image: "rmg1992/discovery-server:11.0.0"
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -130,7 +129,7 @@ services:
       service: microservice-config-server
 
   accounts:
-    image: "rmg1992/accounts:10.0.0" # Specify the image name for accounts
+    image: "rmg1992/accounts:11.0.0" # Specify the image name for accounts
     container_name: accounts-service  # Provide the container name to avoid random name generation
     ports:
       - "8080:8080"  # Expose the port of container to outside by port mapping
@@ -150,7 +149,7 @@ services:
       service: application-services-config
 
   loans:
-    image: "rmg1992/loans:10.0.0" # Specify the image name for loans
+    image: "rmg1992/loans:11.0.0" # Specify the image name for loans
     container_name: loans-service # Provide the container name to avoid random name generation
     ports:
       - "9000:9000"
@@ -170,7 +169,7 @@ services:
       service: application-services-config
 
   cards:
-    image: "rmg1992/cards:10.0.0" # Specify the image name for cards
+    image: "rmg1992/cards:11.0.0" # Specify the image name for cards
     container_name: cards-service  # Provide the container name to avoid random name generation
     ports:
       - "8090:8090"  # Expose the port of container to outside by port mapping
@@ -190,7 +189,7 @@ services:
       service: application-services-config
 
   gateway-server:
-    image: "rmg1992/gateway-server:10.0.0"
+    image: "rmg1992/gateway-server:11.0.0"
     container_name: gateway-server
     ports:
       - "9100:9100"
