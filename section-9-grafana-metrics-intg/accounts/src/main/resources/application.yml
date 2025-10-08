@@ -29,6 +29,14 @@ server:
   servlet:
     context-path: /accounts-service
 
+logging:
+  level:
+    org:
+      fourstack:
+        accounts: DEBUG
+  pattern:
+    level: "%5p[${spring.application.name},%X{trace_id},%X{span_id}]"
+
 app:
   details:
     name: accounts-service

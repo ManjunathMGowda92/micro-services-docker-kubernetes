@@ -3,6 +3,7 @@ appVersion: 1
 deleteDatasources:
   - name: Prometheus
   - name: Loki
+  - name: Tempo
 
 datasources:
   - name: Prometheus
@@ -29,5 +30,24 @@ datasources:
     editable: true
     jsonData:
       httpHeaderName1: "X-Scope-OrgID"
+      derivedFields:
+        - datasourceUid: tempo
+          matcherRegex: "\\[.+,(.+),.+\\]"
+          name: TraceID
+          url: '$${__value.raw}'
     secureJsonData:
       httpHeaderValue1: "tenant1"
+  - name: Tempo
+    type: tempo
+    uid: tempo
+    url: http://tempo:3110
+    access: proxy
+    orgId: 1
+    basicAuth: false
+    isDefault: false
+    version: 1
+    editable: true
+    jsonData:
+      httpMethod: GET
+      serviceMap:
+        datasourceUid: 'prometheus'
