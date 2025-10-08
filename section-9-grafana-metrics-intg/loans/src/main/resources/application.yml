@@ -62,6 +62,9 @@ management:
       enabled: true
     livenessstate:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 # Add arbitrary properties to display the application info on /actuator/env
 info:

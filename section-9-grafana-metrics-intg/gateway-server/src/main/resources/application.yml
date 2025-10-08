@@ -36,6 +36,9 @@ management:
   endpoint:
     gateway:
       access: UNRESTRICTED
+  metrics:
+    tags:
+      application: ${spring.application.name}
 info:
   app:
     name: "Gateway-server"

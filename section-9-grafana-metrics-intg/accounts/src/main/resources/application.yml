@@ -56,6 +56,9 @@ management:
       enabled: true
     livenessstate:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 # These are arbitrary properties
 info:

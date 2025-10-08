@@ -5,6 +5,8 @@ spring:
     import:
       - "optional:configserver:http://localhost:8071/"
 
+server:
+  port: 8761
 
 management:
   endpoints:
@@ -20,3 +22,6 @@ management:
     health:
       probes:
         enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
