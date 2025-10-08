@@ -55,6 +55,7 @@ public class CustomerController {
     public ResponseEntity<CompleteCustomerDetailsDto> retrieveCompleteDetailsByMobileNumber(
             @PathVariable @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
             String mobileNumber) {
+        logger.info("Retrieving the Complete customer details for the mobile number: {}", mobileNumber);
         return customerService.retrieveCompleteCustomerInfo(mobileNumber);
     }
 

@@ -78,6 +78,7 @@ public class LoansController {
     )
     @GetMapping("/{loanNumber}")
     public ResponseEntity<LoansDto> retrieveLoanByLoanNumber(@PathVariable String loanNumber) {
+        logger.info("Fetching loan details based on loan number : {}", loanNumber);
         return service.retrieveLoanByLoanNumber(loanNumber);
     }
 

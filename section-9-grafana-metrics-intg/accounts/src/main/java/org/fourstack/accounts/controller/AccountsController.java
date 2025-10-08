@@ -13,6 +13,8 @@ import org.fourstack.accounts.dto.CustomerDto;
 import org.fourstack.accounts.dto.ErrorResponseDto;
 import org.fourstack.accounts.dto.ResponseDto;
 import org.fourstack.accounts.service.AccountsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
         description = "CRUD APIs to support CREATE, FETCH, UPDATE and DELETE Operations for Account details."
 )
 public class AccountsController {
+    private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
     private final AccountsService accountsService;
 
     @Operation(
@@ -47,6 +50,7 @@ public class AccountsController {
     )
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@RequestBody @Valid CustomerDto customerDto) {
+        logger.info("Creating the account for the customer details.");
         return accountsService.createAccount(customerDto);
     }
 

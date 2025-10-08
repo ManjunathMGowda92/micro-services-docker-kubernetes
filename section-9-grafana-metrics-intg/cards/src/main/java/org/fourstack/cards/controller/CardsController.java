@@ -13,6 +13,8 @@ import org.fourstack.cards.dto.CardsDto;
 import org.fourstack.cards.dto.ErrorResponseDto;
 import org.fourstack.cards.dto.ResponseDto;
 import org.fourstack.cards.service.CardsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +38,7 @@ import java.util.List;
         description = "CRUD APIs to support CREATE, RETRIEVE, UPDATE and DELETE Operations for Cards details"
 )
 public class CardsController {
+    private static final Logger logger = LoggerFactory.getLogger(CardsController.class);
     private final CardsService cardsService;
 
     @Operation(
@@ -49,6 +52,7 @@ public class CardsController {
     )
     @PostMapping
     public ResponseEntity<CardsDto> createCard(@RequestBody @Valid CardCreationDto dto) {
+        logger.info("Creating the new card details.");
         return cardsService.createCard(dto);
     }
 
@@ -64,6 +68,7 @@ public class CardsController {
     @GetMapping("/{mobileNumber}")
     public ResponseEntity<List<CardsDto>> retrieveCards(
             @PathVariable @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits") String mobileNumber) {
+        logger.info("Retrieving the cards details for mobile number : {}", mobileNumber);
         return cardsService.retrieveCards(mobileNumber);
     }
 

@@ -11,6 +11,10 @@ services:
       service: network-deploy-service
     environment:
       SPRING_RABBITMQ_HOST: "rabbitmq"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/BOOT-INF/lib/opentelemetry-javaagent-2.20.1.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318
+      OTEL_METRICS_EXPORTER: none
+      OTEL_LOGS_EXPORTER: none
     deploy:
       resources:
         limits:
@@ -21,7 +25,6 @@ services:
       service: microservice-base-config
     environment:
       SPRING_CONFIG_IMPORT: "configserver:http://banking-config-server:8071/"
-
 
 
   # Create common service for config-server environment property, which needs to be used by accounts, loans and cards.
