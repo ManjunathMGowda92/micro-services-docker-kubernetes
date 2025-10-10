@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: "qa"
+
+
+app:
+  details:
+    name: cards-service
+    author: Manjunath
+    description: Cards Application
+    version: "2.0.0"
+    environment: "QA"
