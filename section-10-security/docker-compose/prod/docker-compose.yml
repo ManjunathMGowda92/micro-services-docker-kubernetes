@@ -1,5 +1,18 @@
 name: banking-services
 services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.0
+    container_name: keycloak
+    ports:
+      - "127.0.0.1:7080:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: "admin"
+      KC_BOOTSTRAP_ADMIN_PASSWORD: "admin"
+    command: "start-dev"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   loki:
     image: grafana/loki:latest
     ports:
@@ -102,7 +115,7 @@ services:
       service: network-deploy-service
 
   banking-config-server:
-    image: "rmg1992/banking-config-server:12.0.0" # Specify the image for config-server
+    image: "rmg1992/banking-config-server:13.0.0" # Specify the image for config-server
     container_name: banking-config-server # Provide container name to avoid random name generation
     ports:
       - "8071:8071"  # Expose the port of container to outside by port mapping
@@ -123,7 +136,7 @@ services:
       service: microservice-base-config
 
   discovery-server:
-    image: "rmg1992/discovery-server:12.0.0"
+    image: "rmg1992/discovery-server:13.0.0"
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -144,10 +157,8 @@ services:
       service: microservice-config-server
 
   accounts:
-    image: "rmg1992/accounts:12.0.0" # Specify the image name for accounts
+    image: "rmg1992/accounts:13.0.0" # Specify the image name for accounts
     container_name: accounts-service  # Provide the container name to avoid random name generation
-    ports:
-      - "8080:8080"  # Expose the port of container to outside by port mapping
     depends_on:
       discovery-server:
         condition: service_healthy # mention the accounts service to wait till config server is completely up and running
@@ -165,10 +176,8 @@ services:
       service: application-services-config
 
   loans:
-    image: "rmg1992/loans:12.0.0" # Specify the image name for loans
+    image: "rmg1992/loans:13.0.0" # Specify the image name for loans
     container_name: loans-service # Provide the container name to avoid random name generation
-    ports:
-      - "9000:9000"
     depends_on:
       discovery-server:
         condition: service_healthy
@@ -186,10 +195,8 @@ services:
       service: application-services-config
 
   cards:
-    image: "rmg1992/cards:12.0.0" # Specify the image name for cards
+    image: "rmg1992/cards:13.0.0" # Specify the image name for cards
     container_name: cards-service  # Provide the container name to avoid random name generation
-    ports:
-      - "8090:8090"  # Expose the port of container to outside by port mapping
     depends_on:
       discovery-server:
         condition: service_healthy # mention the cards service to wait till config server is completely up and running
@@ -207,7 +214,7 @@ services:
       service: application-services-config
 
   gateway-server:
-    image: "rmg1992/gateway-server:12.0.0"
+    image: "rmg1992/gateway-server:13.0.0"
     container_name: gateway-server
     ports:
       - "9100:9100"
@@ -227,6 +234,7 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_CONNECT-TIMEOUT: 2s
       SPRING_DATA_REDIS_TIMEOUT: 1s
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
     extends:
       file: common-config.yml
       service: application-services-config
