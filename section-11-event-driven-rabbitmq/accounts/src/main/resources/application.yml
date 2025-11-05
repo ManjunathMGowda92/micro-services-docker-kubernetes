@@ -9,6 +9,7 @@ spring:
     port: 5672
     username: "fourstack"
     password: "stack4@2808"
+    connection-timeout: 10s
   datasource:
     url: jdbc:postgresql://postgres-aws.cz8a0smi84bm.ap-south-1.rds.amazonaws.com:5432/accounts
     driver-class-name: org.postgresql.Driver
@@ -23,6 +24,15 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+    function:
+      definition: accountNotificationUpdate
+    stream:
+      bindings:
+        account-notification-out-0:
+          destination: notification-queue
+        accountNotificationUpdate-in-0:
+          destination: account-notification-update
+          group: ${spring.application.name}
 
 server:
   port: 8080

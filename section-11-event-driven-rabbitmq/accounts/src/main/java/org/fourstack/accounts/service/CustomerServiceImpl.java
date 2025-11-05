@@ -16,6 +16,7 @@ import org.fourstack.accounts.mapper.AccountsMapper;
 import org.fourstack.accounts.mapper.CustomerMapper;
 import org.fourstack.accounts.repository.CustomerRepository;
 import org.fourstack.accounts.validation.CustomerValidator;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class CustomerServiceImpl implements CustomerService{
     private final AccountsService accountsService;
     private final CustomerValidator customerValidator;
