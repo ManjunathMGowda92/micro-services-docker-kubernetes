@@ -15,6 +15,8 @@ import org.fourstack.accounts.repository.AccountsRepository;
 import org.fourstack.accounts.repository.CustomerRepository;
 import org.fourstack.accounts.util.ApplicationUtil;
 import org.fourstack.accounts.validation.CustomerValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +29,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class AccountsServiceImpl implements AccountsService {
+    private final static Logger logger = LoggerFactory.getLogger(AccountsServiceImpl.class);
+
     private final CustomerService customerService;
     private final AccountsRepository accountsRepository;
     private final CustomerRepository customerRepository;
     private final AccountsMapper accountsMapper;
     private final CustomerMapper customerMapper;
     private final CustomerValidator customerValidator;
+    private final AccountsNotificationService notificationService;
 
     /**
      * Method to create the account for the Customer.
@@ -42,6 +47,7 @@ public class AccountsServiceImpl implements AccountsService {
      */
     @Override
     public ResponseEntity<ResponseDto> createAccount(CustomerDto dto) {
+        logger.info("Creating the account and customer information");
         // Validate the Customer exist by Mobile Number or Email
         customerValidator.validateForNewAccountCreation(dto);
 
@@ -54,8 +60,8 @@ public class AccountsServiceImpl implements AccountsService {
         Customer savedCustomer = customerRepository.save(customer);
 
         // Create an Account for the saved Customer.
-        accountsRepository.save(createNewAccount(savedCustomer));
-
+        Accounts savedAccount = accountsRepository.save(createNewAccount(savedCustomer));
+        notificationService.notifyAccountCreation(savedAccount, savedCustomer);
         // Return the Success Response
         return buildResponseEntity(HttpStatus.CREATED, AccountsConstants.ACCOUNT_CREATED);
     }
