@@ -95,7 +95,7 @@ services:
       service: network-deploy-service
 
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:3-management
     hostname: banking-config-mq
     container_name: banking-rabbit-mq
     ports:
@@ -115,7 +115,7 @@ services:
       service: network-deploy-service
 
   banking-config-server:
-    image: "rmg1992/banking-config-server:13.0.0" # Specify the image for config-server
+    image: "rmg1992/banking-config-server:14.0.0" # Specify the image for config-server
     container_name: banking-config-server # Provide container name to avoid random name generation
     ports:
       - "8071:8071"  # Expose the port of container to outside by port mapping
@@ -136,7 +136,7 @@ services:
       service: microservice-base-config
 
   discovery-server:
-    image: "rmg1992/discovery-server:13.0.0"
+    image: "rmg1992/discovery-server:14.0.0"
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -157,7 +157,7 @@ services:
       service: microservice-config-server
 
   accounts:
-    image: "rmg1992/accounts:13.0.0" # Specify the image name for accounts
+    image: "rmg1992/accounts:14.0.0" # Specify the image name for accounts
     container_name: accounts-service  # Provide the container name to avoid random name generation
     depends_on:
       discovery-server:
@@ -176,7 +176,7 @@ services:
       service: application-services-config
 
   loans:
-    image: "rmg1992/loans:13.0.0" # Specify the image name for loans
+    image: "rmg1992/loans:14.0.0" # Specify the image name for loans
     container_name: loans-service # Provide the container name to avoid random name generation
     depends_on:
       discovery-server:
@@ -195,7 +195,7 @@ services:
       service: application-services-config
 
   cards:
-    image: "rmg1992/cards:13.0.0" # Specify the image name for cards
+    image: "rmg1992/cards:14.0.0" # Specify the image name for cards
     container_name: cards-service  # Provide the container name to avoid random name generation
     depends_on:
       discovery-server:
@@ -213,8 +213,24 @@ services:
       file: common-config.yml
       service: application-services-config
 
+  notification-service:
+    image: "rmg1992/notification-service:14.0.0"
+    container_name: notification-service
+    ports:
+      - "9010:9010"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      banking-config-server:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "notification-service"
+    extends:
+      file: common-config.yml
+      service: microservice-base-config
+
   gateway-server:
-    image: "rmg1992/gateway-server:13.0.0"
+    image: "rmg1992/gateway-server:14.0.0"
     container_name: gateway-server
     ports:
       - "9100:9100"
