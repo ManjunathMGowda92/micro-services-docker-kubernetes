@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.fourstack</groupId>
 	<artifactId>loans</artifactId>
-	<version>8.0.0</version>
+	<version>15.0.0</version>
 	<name>loans</name>
 	<description>Spring Boot application for Loans</description>
 	<url/>

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.fourstack</groupId>
 	<artifactId>accounts</artifactId>
-	<version>8.0.0</version>
+	<version>15.0.0</version>
 	<name>accounts</name>
 	<description>Spring Boot application for Accounts</description>
 	<url/>
@@ -74,7 +74,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+            <artifactId>spring-cloud-stream-binder-kafka</artifactId>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>

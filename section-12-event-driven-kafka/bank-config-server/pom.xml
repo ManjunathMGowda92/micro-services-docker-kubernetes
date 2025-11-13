@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.fourstack</groupId>
 	<artifactId>bank-config-server</artifactId>
-	<version>8.0.0</version>
+	<version>15.0.0</version>
 	<name>bank-config-server</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
