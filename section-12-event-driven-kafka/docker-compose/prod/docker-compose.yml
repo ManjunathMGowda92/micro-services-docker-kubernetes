@@ -114,8 +114,40 @@ services:
       file: common-config.yml
       service: network-deploy-service
 
+  kafka:
+    image: apache/kafka:latest
+    hostname: kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:29093
+      KAFKA_LISTENERS: PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://kafka:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z kafka:9092 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
+
   banking-config-server:
-    image: "rmg1992/banking-config-server:14.0.0" # Specify the image for config-server
+    image: "rmg1992/banking-config-server:15.0.0" # Specify the image for config-server
     container_name: banking-config-server # Provide container name to avoid random name generation
     ports:
       - "8071:8071"  # Expose the port of container to outside by port mapping
@@ -136,7 +168,7 @@ services:
       service: microservice-base-config
 
   discovery-server:
-    image: "rmg1992/discovery-server:14.0.0"
+    image: "rmg1992/discovery-server:15.0.0"
     container_name: discovery-server
     ports:
       - "8761:8761"
@@ -157,11 +189,15 @@ services:
       service: microservice-config-server
 
   accounts:
-    image: "rmg1992/accounts:14.0.0" # Specify the image name for accounts
+    image: "rmg1992/accounts:15.0.0" # Specify the image name for accounts
     container_name: accounts-service  # Provide the container name to avoid random name generation
     depends_on:
       discovery-server:
         condition: service_healthy # mention the accounts service to wait till config server is completely up and running
+      rabbitmq:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8080/accounts-service/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
@@ -171,12 +207,13 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "accounts"
       OTEL_SERVICE_NAME: "accounts"
+      SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: "kafka:9092"
     extends:
       file: common-config.yml
       service: application-services-config
 
   loans:
-    image: "rmg1992/loans:14.0.0" # Specify the image name for loans
+    image: "rmg1992/loans:15.0.0" # Specify the image name for loans
     container_name: loans-service # Provide the container name to avoid random name generation
     depends_on:
       discovery-server:
@@ -195,7 +232,7 @@ services:
       service: application-services-config
 
   cards:
-    image: "rmg1992/cards:14.0.0" # Specify the image name for cards
+    image: "rmg1992/cards:15.0.0" # Specify the image name for cards
     container_name: cards-service  # Provide the container name to avoid random name generation
     depends_on:
       discovery-server:
@@ -214,7 +251,7 @@ services:
       service: application-services-config
 
   notification-service:
-    image: "rmg1992/notification-service:14.0.0"
+    image: "rmg1992/notification-service:15.0.0"
     container_name: notification-service
     ports:
       - "9010:9010"
@@ -225,12 +262,13 @@ services:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "notification-service"
+      SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: "kafka:9092"
     extends:
       file: common-config.yml
       service: microservice-base-config
 
   gateway-server:
-    image: "rmg1992/gateway-server:14.0.0"
+    image: "rmg1992/gateway-server:15.0.0"
     container_name: gateway-server
     ports:
       - "9100:9100"

@@ -14,9 +14,11 @@ public class NotificationFunctions {
     private static final Logger logger = LoggerFactory.getLogger(NotificationFunctions.class);
 
     @Bean
-    public Consumer<AccountsNotificationUpdateDto> accountNotificationUpdate(AccountsNotificationService notificationService) {
+    public Consumer<AccountsNotificationUpdateDto> accountNotificationUpdate(
+            AccountsNotificationService notificationService) {
         return accountUpdateDto -> {
-            logger.info("Updating the Customer Notification for the account creation with account number : {}",
+            logger.info("Received the customer notification update. Update the Customer " +
+                            "Notification table with the account creation notification for account number : {}",
                     accountUpdateDto.accountNumber());
 
             boolean isUpdated = notificationService.updateAccountNotification(accountUpdateDto);
